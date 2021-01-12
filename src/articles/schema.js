@@ -39,16 +39,7 @@ const ArticleSchema = new Schema(
    },
     cover:{type: String,
         required: true,
-    },
-    createdAt: {
-        type:Date,
-        default: Date.now,
-        immutable: true,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
+    }
   },
  
   { timestamps: true }

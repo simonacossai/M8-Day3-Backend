@@ -16,8 +16,6 @@ const server = express()
 
 const port = process.env.PORT
 
-const staticFolderPath = join(__dirname, "../public")
-server.use(express.static(staticFolderPath))
 server.use(express.json())
 
 server.use(cors())
