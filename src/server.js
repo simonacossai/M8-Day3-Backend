@@ -3,7 +3,7 @@ const cors = require("cors")
 const { join } = require("path")
 const listEndpoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
-
+const reviewsRouter = require("./reviews")
 const articlesRouter = require("./articles")
 
 const {
@@ -21,6 +21,8 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/articles", articlesRouter)
+server.use("/reviews", reviewsRouter)
+
 
 // ERROR HANDLERS MIDDLEWARES
 

@@ -39,7 +39,13 @@ const ArticleSchema = new Schema(
    },
     cover:{type: String,
         required: true,
-    }
+    },
+    reviews: [
+        {
+          user: String,
+          text: String,
+        },
+      ],
   },
  
   { timestamps: true }

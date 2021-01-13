@@ -1,7 +1,7 @@
 const express = require("express")
-
+const mongoose = require("mongoose")
 const ArticleSchema = require("./schema")
-
+const ReviewSchema = require("../reviews/schema")
 const router = express.Router()
 
 router.get("/", async (req, res, next) => {
@@ -72,5 +72,119 @@ router.delete("/:id", async (req, res, next) => {
     next(error)
   }
 })
+
+router.post("/:id/reviews/", async (req, res, next) => {
+    try {
+      const newReview = { ...req.body, date: new Date() }
+  
+      const updatedArticle = await ArticleSchema.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: {
+            reviews: newReview,
+          },
+        },
+        { runValidators: true, new: true }
+      )
+      res.status(201).send(updatedArticle)
+    } catch (error) {
+      next(error)
+    }
+  })
+  
+  router.get("/:id/reviews/", async (req, res, next) => {
+    try {
+      const { reviews } = await ArticleSchema.findById(req.params.id, {
+        reviews: 1,
+        _id: 0,
+      })
+      res.send(reviews)
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  })
+  
+  router.get("/:id/reviews/:reviewId", async (req, res, next) => {
+    try {
+      const { reviews } = await ArticleSchema.findOne(
+        {
+          _id: mongoose.Types.ObjectId(req.params.id),
+        },
+        {
+          _id: 0,
+          reviews: {
+            $elemMatch: { _id: mongoose.Types.ObjectId(req.params.reviewId) },
+          },
+        }
+      ) 
+      if (reviews && reviews.length > 0) {
+        res.send(reviews[0])
+      } else {
+        next()
+      }
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  })
+  
+  router.delete("/:id/reviews/:reviewId", async (req, res, next) => {
+    try {
+      const modifiedArticle = await ArticleSchema.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: {
+            reviews: { _id: mongoose.Types.ObjectId(req.params.reviewId) },
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      res.send(modifiedArticle)
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  })
+  
+  router.put("/:id/reviews/:reviewId", async (req, res, next) => {
+    try {
+      const { reviews } = await ArticleSchema.findOne(
+        {
+          _id: mongoose.Types.ObjectId(req.params.id),
+        },
+        {
+          _id: 0,
+          reviews: {
+            $elemMatch: { _id: mongoose.Types.ObjectId(req.params.reviewId) },
+          },
+        }
+      )
+  
+      if (reviews && reviews.length > 0) {
+        const ReviewToReplace = { ...reviews[0].toObject(), ...req.body }
+  
+        const modifiedReview = await ArticleSchema.findOneAndUpdate(
+          {
+            _id: mongoose.Types.ObjectId(req.params.id),
+            "reviews._id": mongoose.Types.ObjectId(req.params.reviewId),
+          },
+          { $set: { "reviews.$": ReviewToReplace } },
+          {
+            runValidators: true,
+            new: true,
+          }
+        )
+        res.send(modifiedReview)
+      } else {
+        next()
+      }
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  })
 
 module.exports = router
