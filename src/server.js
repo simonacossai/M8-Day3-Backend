@@ -3,8 +3,9 @@ const cors = require("cors")
 const { join } = require("path")
 const listEndpoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
-const reviewsRouter = require("./reviews")
 const articlesRouter = require("./articles")
+const authorsRouter = require("./authors")
+
 
 const {
   notFoundHandler,
@@ -21,7 +22,7 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/articles", articlesRouter)
-server.use("/reviews", reviewsRouter)
+server.use("/authors", authorsRouter)
 
 
 // ERROR HANDLERS MIDDLEWARES

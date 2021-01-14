@@ -3,7 +3,10 @@ const mongoose = require("mongoose")
 const ArticleSchema = require("./schema")
 const ReviewSchema = require("../reviews/schema")
 const router = express.Router()
-
+/*
+.map((book) => book.price * book.quantity)
+    .reduce((acc, el) => acc + el, 0);
+    */
 router.get("/", async (req, res, next) => {
   try {
     const articles = await ArticleSchema.find()   //find is the equivalent of our generic read of the whole json file

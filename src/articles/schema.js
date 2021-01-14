@@ -26,17 +26,7 @@ const ArticleSchema = new Schema(
            required: true,
        }
    },
-   author:{
-       type: Object,
-       name:{
-           type: String,
-           required: true,
-       },
-       img: {
-           type: String,
-           required: true,        
-       }
-   },
+   authors: [{ type: Schema.Types.ObjectId, ref: "Author" }],
     cover:{type: String,
         required: true,
     },
