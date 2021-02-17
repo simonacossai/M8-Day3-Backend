@@ -4,7 +4,8 @@ const { join } = require("path")
 const listEndpoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
 const articlesRouter = require("./articles")
-const authorsRouter = require("./authors")
+const usersRouter = require("./users")
+const authRouter = require("./auth/auth.js");
 
 
 const {
@@ -22,7 +23,8 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/articles", articlesRouter)
-server.use("/authors", authorsRouter)
+server.use("/users", usersRouter)
+server.use("/api/user", authRouter);
 
 
 // ERROR HANDLERS MIDDLEWARES
